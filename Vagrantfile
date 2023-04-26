@@ -10,6 +10,7 @@ IP_START = Integer(IP_SECTIONS.captures[1])
 NUM_WORKER_NODES = settings["nodes"]["workers"]["count"]
 
 Vagrant.configure("2") do |config|
+  config.vm.box_download_insecure=true
   config.vm.provision "shell", env: { "IP_NW" => IP_NW, "IP_START" => IP_START, "NUM_WORKER_NODES" => NUM_WORKER_NODES }, inline: <<-SHELL
       apt-get update -y
       echo "$IP_NW$((IP_START)) master-node" >> /etc/hosts
@@ -86,9 +87,9 @@ Vagrant.configure("2") do |config|
       node.vm.provision "shell", path: "scripts/node.sh"
 
       # Only install the dashboard after provisioning the last worker (and when enabled).
-      if i == NUM_WORKER_NODES and settings["software"]["dashboard"] and settings["software"]["dashboard"] != ""
-        node.vm.provision "shell", path: "scripts/dashboard.sh"
-      end
+      # if i == NUM_WORKER_NODES and settings["software"]["dashboard"] and settings["software"]["dashboard"] != ""
+      #   node.vm.provision "shell", path: "scripts/dashboard.sh"
+      # end
     end
 
   end
